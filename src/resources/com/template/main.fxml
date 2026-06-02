@@ -7,33 +7,47 @@
     <children>
         <Pane prefHeight="404.0" prefWidth="600.0" style="-fx-background-color: #00a8ff;">
             <children>
-                <Button fx:id="btnCadastrarAction" layoutX="519.0" layoutY="196.0" mnemonicParsing="false" onAction="#btnCadastrarAction" prefHeight="31.0" prefWidth="74.0" style="-fx-background-color: #90EE90;" text="Cadastrar" />
-                <Button fx:id="btnEditar" layoutX="519.0" layoutY="263.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="64.0" style="-fx-background-color: #FFFFE0;" text="Editar" />
-                <Button fx:id="btnExcluir" layoutX="519.0" layoutY="329.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="64.0" style="-fx-background-color: #FF7F7F;" text="Excluir" />
+                <Button fx:id="btnLimpar" layoutX="495.0" layoutY="135.0" mnemonicParsing="false" onAction="#btnLimparAction" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #ADD8E6; -fx-background-radius: 5; -fx-font-weight: bold; -fx-cursor: hand;" text="Limpar" />
+                <Button fx:id="btnCadastrarAction" layoutX="495.0" layoutY="200.0" mnemonicParsing="false" onAction="#btnCadastrarAction" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #90EE90; -fx-background-radius: 5; -fx-font-weight: bold; -fx-cursor: hand;" text="Cadastrar" />
+                <Button fx:id="btnEditar" layoutX="495.0" layoutY="265.0" mnemonicParsing="false" onAction="#btnEditarAction" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #FFFFE0; -fx-background-radius: 5; -fx-font-weight: bold; -fx-cursor: hand;" text="Editar" />
+                <Button fx:id="btnExcluir" layoutX="495.0" layoutY="330.0" mnemonicParsing="false" onAction="#btnExcluirAction" prefHeight="32.0" prefWidth="90.0" style="-fx-background-color: #FF7F7F; -fx-background-radius: 5; -fx-font-weight: bold; -fx-cursor: hand;" text="Excluir" />
 
-                <Label fx:id="lblNome" layoutX="30.0" layoutY="75.0" text="Nome:" />
-                <Label fx:id="lblIdade" layoutX="30.0" layoutY="112.0" text="Email" />
-                <Label fx:id="lblPosicao" layoutX="242.0" layoutY="75.0" text="Disciplina" />
-                <Label fx:id="lblTime" layoutX="251.0" layoutY="45.0" text="Salário" />
-
-                <TextField fx:id="txtNome" layoutX="74.0" layoutY="71.0" promptText="Digite o nome" style="-fx-background-color: #fff6ed;" />
-                <TextField fx:id="txtEmail" layoutX="74.0" layoutY="108.0" promptText="Digite o email" style="-fx-background-color: #fff6ed;" />
-                <TextField fx:id="txtDisciplina" layoutX="300.0" layoutY="71.0" promptText="Digite a disciplina" style="-fx-background-color: #fff6ed;" />
-
-                <TextField fx:id="numSalario" layoutX="300.0" layoutY="41.0" promptText="0.00" style="-fx-background-color: #fff6ed;" />
-
-                <TableView fx:id="tblVolei" layoutX="30.0" layoutY="169.0" prefHeight="200.0" prefWidth="474.0">
+                <TableView fx:id="tblProfessor" layoutX="25.0" layoutY="185.0" onMouseClicked="#carregarCampos" prefHeight="195.0" prefWidth="455.0" style="-fx-background-color: #fdfdfd; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #dcdde1; -fx-border-width: 1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);">
                     <columns>
-                        <TableColumn fx:id="colId" prefWidth="75.0" text="ID" />
-                        <TableColumn fx:id="colNome" prefWidth="75.0" text="Nome" />
-                        <TableColumn fx:id="colIdade" prefWidth="75.0" text="Email" />
-                        <TableColumn fx:id="colPosicao" prefWidth="75.0" text="Salario" />
-                        <TableColumn fx:id="colTime" prefWidth="75.0" text="Disciplina" />
+                        <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="colNome" prefWidth="110.0" text="Nome" />
+                        <TableColumn fx:id="colEmail" prefWidth="115.0" text="Email" />
+                        <TableColumn fx:id="colSalario" prefWidth="80.0" text="Salário" />
+                        <TableColumn fx:id="colDisciplina" prefWidth="98.0" text="Disciplina" />
                     </columns>
                 </TableView>
 
-                <Label fx:id="lblId" layoutX="42.0" layoutY="45.0" text="ID:" />
-                <TextField fx:id="intId" layoutX="74.0" layoutY="41.0" promptText="Ex: 1" style="-fx-background-color: #fff6ed;" />
+                <GridPane hgap="10.0" layoutX="25.0" layoutY="14.0" prefHeight="155.0" prefWidth="430.0" vgap="6.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="80.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="340.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <TextField fx:id="intId" promptText="Ex: 1" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" />
+                        <TextField fx:id="txtNome" promptText="Digite o nome completo" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtEmail" promptText="professor@email.com" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="numSalario" promptText="0.00" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtDisciplina" promptText="Digite a disciplina cadastrada" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                        <Label fx:id="lblId" style="-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;" text="ID:" textAlignment="CENTER" />
+                        <Label fx:id="lblNome" style="-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;" text="Nome:" GridPane.rowIndex="1" />
+                        <Label fx:id="lblIdade" style="-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;" text="Email:" GridPane.rowIndex="2" />
+                        <Label fx:id="lblTime" style="-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;" text="Salário:" GridPane.rowIndex="3" />
+                        <Label fx:id="lblPosicao" style="-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;" text="Disciplina:" GridPane.rowIndex="4" />
+                    </children>
+                </GridPane>
             </children>
         </Pane>
     </children>
