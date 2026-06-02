@@ -35,7 +35,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <TextField fx:id="intId" promptText="Ex: 1" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" />
+                        <TextField fx:id="intId" disable="true" editable="false" promptText="Ex: 1" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" />
                         <TextField fx:id="txtNome" promptText="Digite o nome completo" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="txtEmail" promptText="professor@email.com" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="numSalario" promptText="0.00" style="-fx-background-color: #ffffff; -fx-background-radius: 4; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-padding: 4 8 4 8;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
