@@ -23,16 +23,16 @@ public class ProfessorDAO {
         conn = c.conectaBD();
     }
 
-    public void inserir(ProfessorDTO p) throws SQLException {
+    public void inserir(ProfessorDTO prof) throws SQLException {
 
         String sql = "INSERT INTO professores (nome, email, salario, disciplina) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) { //fecha automaticamente
 
-            pstmt.setString(1, p.getNome());
-            pstmt.setString(2, p.getEmail());
-            pstmt.setDouble(3, p.getSalario());
-            pstmt.setString(4, p.getDisciplina());
+            pstmt.setString(1, prof.getNome());
+            pstmt.setString(2, prof.getEmail());
+            pstmt.setDouble(3, prof.getSalario());
+            pstmt.setString(4, prof.getDisciplina());
 
             pstmt.execute();
 
@@ -82,17 +82,17 @@ public class ProfessorDAO {
         return listaProfessores;
     }
 
-    public void atualizar(ProfessorDTO p) throws SQLException {
+    public void atualizar(ProfessorDTO prof) throws SQLException {
 
         String sql = "UPDATE professores SET nome = ?, email = ?, salario = ?, disciplina = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, p.getNome());
-            pstmt.setString(2, p.getEmail());
-            pstmt.setDouble(3, p.getSalario());
-            pstmt.setString(4, p.getDisciplina());
-            pstmt.setInt(5, p.getId());
+            pstmt.setString(1, prof.getNome());
+            pstmt.setString(2, prof.getEmail());
+            pstmt.setDouble(3, prof.getSalario());
+            pstmt.setString(4, prof.getDisciplina());
+            pstmt.setInt(5, prof.getId());
 
             pstmt.execute();
 
