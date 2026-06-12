@@ -13,14 +13,13 @@ import java.util.logging.Logger;
 
 public class ProfessorDAO {
 
-    private static final Logger logger =
-            Logger.getLogger(ProfessorDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(ProfessorDAO.class.getName());
 
     private Connection conn;
 
     public ProfessorDAO() {
-        Conexao c = new Conexao();
-        conn = c.conectaBD();
+        Conexao conexao = new Conexao();
+        conn = conexao.conectaBD();
     }
 
     public void inserir(ProfessorDTO prof) throws SQLException {
@@ -54,22 +53,22 @@ public class ProfessorDAO {
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            ResultSet rs = pstmt.executeQuery();
+            ResultSet resultSet = pstmt.executeQuery();
 
-            while (rs.next()) {
+            while (resultSet.next()) {
 
                 ProfessorDTO professor = new ProfessorDTO(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("email"),
-                        rs.getDouble("salario"),
-                        rs.getString("disciplina")
+                        resultSet.getInt("id"),
+                        resultSet.getString("nome"),
+                        resultSet.getString("email"),
+                        resultSet.getDouble("salario"),
+                        resultSet.getString("disciplina")
                 );
 
                 listaProfessores.add(professor);
             }
 
-            rs.close();
+            resultSet.close();
 
 
         } catch (SQLException e) {

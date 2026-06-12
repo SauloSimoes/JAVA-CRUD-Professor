@@ -71,11 +71,10 @@ public class MainController {
 
         try {
 
-            ProfessorDAO ProfDAO = new ProfessorDAO();
-            List<ProfessorDTO> listaProfessor = ProfDAO.listar();
+            ProfessorDAO profDAO = new ProfessorDAO();
+            List<ProfessorDTO> listaProfessor = profDAO.listar();
 
-            ObservableList<ProfessorDTO> dadosTabela =
-                    FXCollections.observableArrayList(listaProfessor);
+            ObservableList<ProfessorDTO> dadosTabela = FXCollections.observableArrayList(listaProfessor);
 
             tblProfessor.setItems(dadosTabela);
 
@@ -94,25 +93,21 @@ public class MainController {
 
     // UX 1: contador
     private void atualizarContador() {
-        lblTotal.setText(
-                "Total de registros: " +
-                        tblProfessor.getItems().size()
-        );
+        lblTotal.setText("Total de registros: " + tblProfessor.getItems().size());
     }
 
     @FXML
     private void carregarCampos() {
 
-        ProfessorDTO ProfDTO =
-                tblProfessor.getSelectionModel().getSelectedItem();
+        ProfessorDTO profDTO = tblProfessor.getSelectionModel().getSelectedItem();
 
-        if (ProfDTO != null) {
+        if (profDTO != null) {
 
-            intId.setText(String.valueOf(ProfDTO.getId()));
-            txtNome.setText(ProfDTO.getNome());
-            txtEmail.setText(ProfDTO.getEmail());
-            txtDisciplina.setText(ProfDTO.getDisciplina());
-            numSalario.setText(String.valueOf(ProfDTO.getSalario()));
+            intId.setText(String.valueOf(profDTO.getId()));
+            txtNome.setText(profDTO.getNome());
+            txtEmail.setText(profDTO.getEmail());
+            txtDisciplina.setText(profDTO.getDisciplina());
+            numSalario.setText(String.valueOf(profDTO.getSalario()));
         }
     }
 
@@ -126,11 +121,10 @@ public class MainController {
             String disciplina = txtDisciplina.getText();
             double salario = Double.parseDouble(numSalario.getText());
 
-            ProfessorDTO ProfDTO =
-                    new ProfessorDTO(0, nome, email, salario, disciplina);
+            ProfessorDTO profDTO = new ProfessorDTO(0, nome, email, salario, disciplina);
 
-            ProfessorDAO ProfDAO = new ProfessorDAO();
-            ProfDAO.inserir(ProfDTO);
+            ProfessorDAO profDAO = new ProfessorDAO();
+            profDAO.inserir(profDTO);
 
             //System.out.println("Professor cadastrado");
 
@@ -162,15 +156,14 @@ public class MainController {
 
         Optional<ButtonType> resultado = alert.showAndWait(); //diz para esperar o usuario clicar em algo
 
-        if (resultado.isPresent() &&
-                resultado.get() == ButtonType.OK) {
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
 
             try {
 
                 int id = Integer.parseInt(intId.getText());
 
-                ProfessorDAO ProfDAO = new ProfessorDAO();
-                ProfDAO.deletar(id);
+                ProfessorDAO profDAO = new ProfessorDAO();
+                profDAO.deletar(id);
 
                 //System.out.println("Professor excluído");
 
@@ -218,8 +211,7 @@ public class MainController {
             String disciplina = txtDisciplina.getText();
             double salario = Double.parseDouble(numSalario.getText());
 
-            ProfessorDTO ProfDTO =
-                    new ProfessorDTO(id, nome, email, salario, disciplina);
+            ProfessorDTO ProfDTO = new ProfessorDTO(id, nome, email, salario, disciplina);
 
             ProfessorDAO ProfDAO = new ProfessorDAO();
             ProfDAO.atualizar(ProfDTO);
