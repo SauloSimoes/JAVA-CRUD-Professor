@@ -1,10 +1,12 @@
-package com.template;
+package com.template.controller;
+
+import com.template.model.ProfessorDAO;
+import com.template.model.ProfessorDTO;
+import static com.template.util.DialogUtil.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
-import java.util.Optional;
 
 public class MainController {
 
@@ -57,7 +58,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -68,41 +68,33 @@ public class MainController {
     }
 
     private void carregarProfessor() {
-
         try {
-
             ProfessorDAO profDAO = new ProfessorDAO();
             List<ProfessorDTO> listaProfessor = profDAO.listar();
 
-            ObservableList<ProfessorDTO> dadosTabela = FXCollections.observableArrayList(listaProfessor);
+            ObservableList<ProfessorDTO> dadosTabelaProf = FXCollections.observableArrayList(listaProfessor);
+            tblProfessor.setItems(dadosTabelaProf);
 
-            tblProfessor.setItems(dadosTabela);
-
-            //UX 1: contador
+            // UX 1: contador
             atualizarContador();
 
-            //System.out.println("Tabela atualizada");
-
         } catch (Exception e) {
-
-            // UI 2: cores diferentes
             lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Erro ao carregar professores.");
+            lblMensagem.setText("Erro ao carregar professores");
+
+            mostrarErro("Erro", "Falha de Conexão", "Não foi possível carregar a lista de professores");
         }
     }
 
-    // UX 1: contador
     private void atualizarContador() {
         lblTotal.setText("Total de registros: " + tblProfessor.getItems().size());
     }
 
     @FXML
     private void carregarCampos() {
-
         ProfessorDTO profDTO = tblProfessor.getSelectionModel().getSelectedItem();
 
         if (profDTO != null) {
-
             intId.setText(String.valueOf(profDTO.getId()));
             txtNome.setText(profDTO.getNome());
             txtEmail.setText(profDTO.getEmail());
@@ -113,9 +105,7 @@ public class MainController {
 
     @FXML
     private void btnCadastrarAction() {
-
         try {
-
             String nome = txtNome.getText();
             String email = txtEmail.getText();
             String disciplina = txtDisciplina.getText();
@@ -126,68 +116,100 @@ public class MainController {
             ProfessorDAO profDAO = new ProfessorDAO();
             profDAO.inserir(profDTO);
 
-            //System.out.println("Professor cadastrado");
-
             carregarProfessor();
-
-            // UX 3: limpar campos
             btnLimparAction();
 
-            // UI 2: cor diferente
             lblMensagem.setStyle("-fx-text-fill: green;");
             lblMensagem.setText("Professor cadastrado com sucesso!");
+            informar("Sucesso", "Cadastro Realizado", "Professor cadastrado com sucesso");
+
+        } catch (NumberFormatException e) {
+            lblMensagem.setStyle("-fx-text-fill: red;");
+            lblMensagem.setText("Salário inválido");
+            mostrarErro("Erro de Validação", "Valor Inválido", "Informe um valor numérico válido para o salário");
 
         } catch (Exception e) {
-
-            // UI 2: cor diferente
             lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Erro ao cadastrar professor.");
+            lblMensagem.setText("Erro ao cadastrar professor");
+            mostrarErro("Erro no Cadastro", "Falha ao Inserir", "Ocorreu um erro ao tentar salvar o professor no banco de dados");
+        }
+    }
+
+    @FXML
+    private void btnEditarAction() {
+        try {
+            int id = Integer.parseInt(intId.getText());
+            String nome = txtNome.getText();
+            String email = txtEmail.getText();
+            String disciplina = txtDisciplina.getText();
+            double salario = Double.parseDouble(numSalario.getText());
+
+            ProfessorDTO profDTO = new ProfessorDTO(id, nome, email, salario, disciplina);
+
+            ProfessorDAO profDAO = new ProfessorDAO();
+            profDAO.atualizar(profDTO);
+
+            carregarProfessor();
+            btnLimparAction();
+
+            lblMensagem.setStyle("-fx-text-fill: green;");
+            lblMensagem.setText("Professor atualizado com sucesso!");
+            informar("Sucesso", "Atualização Realizada", "Dados do professor atualizados com sucesso");
+
+        } catch (NumberFormatException e) {
+            lblMensagem.setStyle("-fx-text-fill: red;");
+            lblMensagem.setText("Campos ID ou Salário inválidos.");
+            mostrarErro("Erro de Validação", "Valores Inválidos", "verifique se o ID e o Salário contêm números válidos");
+
+        } catch (Exception e) {
+            lblMensagem.setStyle("-fx-text-fill: red;");
+            lblMensagem.setText("Erro ao atualizar professor.");
+            mostrarErro("Erro na Edição", "Falha ao Atualizar", "Ocorreu um erro ao atualizar os dados do professor");
         }
     }
 
     @FXML
     private void btnExcluirAction() {
+        if (intId.getText().trim().isEmpty()) {
+            mostrarErro("Aviso", "Nenhum Registro Selecionado", "Selecione um professor na tabela ou digite um ID para excluir");
+            return;
+        }
 
-        // UX 2: confirmacao
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Excluir Professor");
-        alert.setContentText("Deseja realmente excluir este professor?");
+        boolean confirmou = confirmacao(
+                "Confirmação",
+                "Excluir Professor",
+                "Deseja realmente excluir este professor?"
+        );
 
-        Optional<ButtonType> resultado = alert.showAndWait(); //diz para esperar o usuario clicar em algo
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-
+        if (confirmou) {
             try {
-
                 int id = Integer.parseInt(intId.getText());
 
                 ProfessorDAO profDAO = new ProfessorDAO();
                 profDAO.deletar(id);
 
-                //System.out.println("Professor excluído");
-
                 carregarProfessor();
-
-                // UX 3: limpar campos
                 btnLimparAction();
 
-                // UI 2: cor !=
                 lblMensagem.setStyle("-fx-text-fill: green;");
-                lblMensagem.setText("Professor excluído com sucesso!");
+                lblMensagem.setText("Professor excluído com sucesso");
+                informar("Sucesso", "Exclusão Concluída", "Professor excluído com sucesso");
+
+            } catch (NumberFormatException e) {
+                lblMensagem.setStyle("-fx-text-fill: red;");
+                lblMensagem.setText("ID inválido para exclusão");
+                mostrarErro("Erro de Validação", "ID Inválido", "O ID informado não é um número inteiro válido");
 
             } catch (Exception e) {
-
-                // UI 2: cor !=
                 lblMensagem.setStyle("-fx-text-fill: red;");
-                lblMensagem.setText("Erro ao excluir professor.");
+                lblMensagem.setText("Erro ao excluir professor");
+                mostrarErro("Erro na Exclusão", "Falha ao Excluir", "Não foi possível remover o professor do banco de dados");
             }
         }
     }
 
     @FXML
     private void btnLimparAction() {
-
         intId.clear();
         txtNome.clear();
         txtEmail.clear();
@@ -195,40 +217,6 @@ public class MainController {
         numSalario.clear();
 
         txtNome.requestFocus();
-
-        // UI 2: limpa a label mensagem
         lblMensagem.setText("");
-    }
-
-    @FXML
-    private void btnEditarAction() {
-
-        try {
-
-            int id = Integer.parseInt(intId.getText());
-            String nome = txtNome.getText();
-            String email = txtEmail.getText();
-            String disciplina = txtDisciplina.getText();
-            double salario = Double.parseDouble(numSalario.getText());
-
-            ProfessorDTO ProfDTO = new ProfessorDTO(id, nome, email, salario, disciplina);
-
-            ProfessorDAO ProfDAO = new ProfessorDAO();
-            ProfDAO.atualizar(ProfDTO);
-
-            System.out.println("Professor editado");
-
-            carregarProfessor();
-
-            // UI 2: cor !=
-            lblMensagem.setStyle("-fx-text-fill: green;");
-            lblMensagem.setText("Professor atualizado com sucesso!");
-
-        } catch (Exception e) {
-
-            // UI 2: cor !=
-            lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Erro ao atualizar professor.");
-        }
     }
 }
