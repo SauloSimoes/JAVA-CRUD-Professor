@@ -2,6 +2,7 @@ package com.template.controller;
 
 import com.template.model.ProfessorDAO;
 import com.template.model.ProfessorDTO;
+import com.template.validator.ProfessorValidator;
 import static com.template.util.DialogUtil.*;
 
 import javafx.collections.FXCollections;
@@ -17,44 +18,21 @@ import java.util.List;
 
 public class MainController {
 
-    @FXML
-    private TableView<ProfessorDTO> tblProfessor;
+    @FXML private TableView<ProfessorDTO> tblProfessor;
+    @FXML private TableColumn<ProfessorDTO, Integer> colId;
+    @FXML private TableColumn<ProfessorDTO, String> colNome;
+    @FXML private TableColumn<ProfessorDTO, String> colEmail;
+    @FXML private TableColumn<ProfessorDTO, Double> colSalario;
+    @FXML private TableColumn<ProfessorDTO, String> colDisciplina;
 
-    @FXML
-    private TableColumn<ProfessorDTO, Integer> colId;
+    @FXML private TextField intId;
+    @FXML private TextField txtNome;
+    @FXML private TextField txtEmail;
+    @FXML private TextField txtDisciplina;
+    @FXML private TextField numSalario;
 
-    @FXML
-    private TableColumn<ProfessorDTO, String> colNome;
-
-    @FXML
-    private TableColumn<ProfessorDTO, String> colEmail;
-
-    @FXML
-    private TableColumn<ProfessorDTO, Double> colSalario;
-
-    @FXML
-    private TableColumn<ProfessorDTO, String> colDisciplina;
-
-    @FXML
-    private TextField intId;
-
-    @FXML
-    private TextField txtNome;
-
-    @FXML
-    private TextField txtEmail;
-
-    @FXML
-    private TextField txtDisciplina;
-
-    @FXML
-    private TextField numSalario;
-
-    @FXML
-    private Label lblMensagem;
-
-    @FXML
-    private Label lblTotal;
+    @FXML private Label lblMensagem;
+    @FXML private Label lblTotal;
 
     @FXML
     public void initialize() {
@@ -75,13 +53,11 @@ public class MainController {
             ObservableList<ProfessorDTO> dadosTabelaProf = FXCollections.observableArrayList(listaProfessor);
             tblProfessor.setItems(dadosTabelaProf);
 
-            // UX 1: contador
             atualizarContador();
 
         } catch (Exception e) {
             lblMensagem.setStyle("-fx-text-fill: red;");
             lblMensagem.setText("Erro ao carregar professores");
-
             mostrarErro("Erro", "Falha de Conexão", "Não foi possível carregar a lista de professores");
         }
     }
@@ -105,11 +81,20 @@ public class MainController {
 
     @FXML
     private void btnCadastrarAction() {
+        if (!ProfessorValidator.validarCampos(
+                txtNome.getText(),
+                txtEmail.getText(),
+                txtDisciplina.getText(),
+                numSalario.getText()  ))
+        {
+            return;
+        }
+
         try {
-            String nome = txtNome.getText();
-            String email = txtEmail.getText();
-            String disciplina = txtDisciplina.getText();
-            double salario = Double.parseDouble(numSalario.getText());
+            String nome = txtNome.getText().trim();
+            String email = txtEmail.getText().trim();
+            String disciplina = txtDisciplina.getText().trim();
+            double salario = Double.parseDouble(numSalario.getText().trim());
 
             ProfessorDTO profDTO = new ProfessorDTO(0, nome, email, salario, disciplina);
 
@@ -123,11 +108,6 @@ public class MainController {
             lblMensagem.setText("Professor cadastrado com sucesso!");
             informar("Sucesso", "Cadastro Realizado", "Professor cadastrado com sucesso");
 
-        } catch (NumberFormatException e) {
-            lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Salário inválido");
-            mostrarErro("Erro de Validação", "Valor Inválido", "Informe um valor numérico válido para o salário");
-
         } catch (Exception e) {
             lblMensagem.setStyle("-fx-text-fill: red;");
             lblMensagem.setText("Erro ao cadastrar professor");
@@ -137,12 +117,22 @@ public class MainController {
 
     @FXML
     private void btnEditarAction() {
+        if (!ProfessorValidator.validarId(intId.getText()) ||
+                !ProfessorValidator.validarCampos(
+                        txtNome.getText(),
+                        txtEmail.getText(),
+                        txtDisciplina.getText(),
+                        numSalario.getText()  ))
+        {
+            return;
+        }
+
         try {
-            int id = Integer.parseInt(intId.getText());
-            String nome = txtNome.getText();
-            String email = txtEmail.getText();
-            String disciplina = txtDisciplina.getText();
-            double salario = Double.parseDouble(numSalario.getText());
+            int id = Integer.parseInt(intId.getText().trim());
+            String nome = txtNome.getText().trim();
+            String email = txtEmail.getText().trim();
+            String disciplina = txtDisciplina.getText().trim();
+            double salario = Double.parseDouble(numSalario.getText().trim());
 
             ProfessorDTO profDTO = new ProfessorDTO(id, nome, email, salario, disciplina);
 
@@ -156,11 +146,6 @@ public class MainController {
             lblMensagem.setText("Professor atualizado com sucesso!");
             informar("Sucesso", "Atualização Realizada", "Dados do professor atualizados com sucesso");
 
-        } catch (NumberFormatException e) {
-            lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Campos ID ou Salário inválidos.");
-            mostrarErro("Erro de Validação", "Valores Inválidos", "verifique se o ID e o Salário contêm números válidos");
-
         } catch (Exception e) {
             lblMensagem.setStyle("-fx-text-fill: red;");
             lblMensagem.setText("Erro ao atualizar professor.");
@@ -170,8 +155,7 @@ public class MainController {
 
     @FXML
     private void btnExcluirAction() {
-        if (intId.getText().trim().isEmpty()) {
-            mostrarErro("Aviso", "Nenhum Registro Selecionado", "Selecione um professor na tabela ou digite um ID para excluir");
+        if (!ProfessorValidator.validarId(intId.getText())) {
             return;
         }
 
@@ -183,7 +167,7 @@ public class MainController {
 
         if (confirmou) {
             try {
-                int id = Integer.parseInt(intId.getText());
+                int id = Integer.parseInt(intId.getText().trim());
 
                 ProfessorDAO profDAO = new ProfessorDAO();
                 profDAO.deletar(id);
@@ -194,11 +178,6 @@ public class MainController {
                 lblMensagem.setStyle("-fx-text-fill: green;");
                 lblMensagem.setText("Professor excluído com sucesso");
                 informar("Sucesso", "Exclusão Concluída", "Professor excluído com sucesso");
-
-            } catch (NumberFormatException e) {
-                lblMensagem.setStyle("-fx-text-fill: red;");
-                lblMensagem.setText("ID inválido para exclusão");
-                mostrarErro("Erro de Validação", "ID Inválido", "O ID informado não é um número inteiro válido");
 
             } catch (Exception e) {
                 lblMensagem.setStyle("-fx-text-fill: red;");
