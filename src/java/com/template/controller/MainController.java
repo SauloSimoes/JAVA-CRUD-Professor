@@ -34,7 +34,6 @@ public class MainController {
     @FXML
     private TableColumn<ProfessorDTO, String> colDisciplina;
 
-    // ─── Campos do formulário ────────────────────────────────────────────────
     @FXML
     private TextField intId;
     @FXML
